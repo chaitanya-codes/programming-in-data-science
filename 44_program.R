@@ -1,45 +1,44 @@
-# Step 1: Install and load package
-install.packages("dplyr")
-library(dplyr)
+# Step 1:
+install.packages("ggplot2")
+library(ggplot2)
 
-# Load dataset
-data("starwars", package = "dplyr")
-View(starwars)
+# Step 2:
+data <- data.frame(
+  a = 1:10,
+  b = rnorm(10),
+  label = letters[11:20]
+)
 
-# Step 2: Select required columns
-data_selected <- starwars %>%
-  select(name, species, height, mass, homeworld, gender)
-View(data_selected)
+print(data)
 
-# Step 3: Filter species with more than 2 characters
-species_filtered <- data_selected %>%
-  group_by(species) %>%
-  filter(n() > 2)
-View(species_filtered)
+# Step 3.1.1: Scatter plot
+ggplot(data = data, aes(x = a, y = b)) +
+  geom_point() +
+  labs(title = "Scatter Plot", x = "X-axis", y = "Y-axis")
 
-# Step 4: Create new columns
-data_transformed <- species_filtered %>%
-  mutate(
-    height_m = height / 100,
-    weight_category = case_when(
-      mass < 50 ~ "Underweight",
-      mass >= 50 & mass < 80 ~ "Normal",
-      mass >= 80 ~ "Overweight",
-      TRUE ~ NA_character_
-    )
-  )
-View(data_transformed)
+# Step 3.1.2: Scatter plot with color
+ggplot(data = data, aes(x = a, y = b)) +
+  geom_point(color = "forestgreen", size = 3) +
+  labs(title = "Scatter Plot with Color Customization", x = "X-axis", y = "Y-axis")
 
-# Step 5: Average height for species-gender
-avg_height <- data_transformed %>%
-  group_by(species, gender) %>%
-  summarize(avg_height = mean(height, na.rm = TRUE))
-View(avg_height)
+# Step 3.1.3: Scatter plot with labels
+ggplot(data = data, aes(x = a, y = b)) +
+  geom_point(color = "forestgreen", size = 3) +
+  geom_text(aes(label = label), vjust = -1, color = "blue") +
+  labs(title = "Scatter Plot with Text Labels", x = "X-axis", y = "Y-axis")
 
-# Step 6: Top 3 species with highest average height
-top_species <- avg_height %>%
-  group_by(species) %>%
-  summarize(mean_height = mean(avg_height, na.rm = TRUE)) %>%
-  arrange(desc(mean_height)) %>%
-  slice_head(n = 3)
-View(top_species)
+# Step 3.1.4: Scatter plot with smooth line
+ggplot(data = data, aes(x = a, y = b)) +
+  geom_point(color = "forestgreen", size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Scatter Plot with Smooth Line", x = "X-axis", y = "Y-axis")
+
+# Step 3.2: Line plot
+ggplot(data = data, aes(x = a, y = b)) +
+  geom_line(color = "red", linewidth = 1) +
+  labs(title = "Line Plot", x = "X-axis", y = "Y-axis")
+
+# Step 3.3: Bar plot
+ggplot(data = data, aes(x = factor(a), y = b)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(title = "Bar Plot", x = "Category (a)", y = "Values")
