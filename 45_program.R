@@ -1,25 +1,34 @@
-# Step 1: Install ggplot2 (only once)
+# Step 1: Install and load package
 install.packages("ggplot2")
-
-# Step 2: Load library
 library(ggplot2)
 
-# Step 3: Create dataset
-plant_data <- data.frame(
-  Plant_ID = c(1, 2, 3, 4, 5),
-  Growth_Rate = c(3.2, 1.8, 2.6, 0.9, 3.8),
-  Condition_Label = c("Sunny", "Shade", "Rainy", "Drought", "Cloudy")
-)
+# Load dataset
+data("midwest", package = "ggplot2")
+View(midwest)
 
-# Step 4: Create scatter plot
-ggplot(plant_data, aes(x = Plant_ID, y = Growth_Rate)) +
-  geom_point(color = "dodgerblue", size = 4) +
-  geom_text(aes(label = Condition_Label),
-            vjust = 1.5,
-            color = "darkorange") +
-  labs(
-    title = "Scatter Plot of Plant Growth Data",
-    x = "Plant ID",
-    y = "Growth Rate"
-  ) +
-  theme_minimal()
+# Step 2: Scatter Plot with trend line
+ggplot(midwest, aes(x = percollege, y = percadultpoverty, color = state)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm") +
+  labs(title = "College Education vs Adult Poverty")
+
+# Step 3: Bar Chart for total population by state
+ggplot(midwest, aes(x = state, y = poptotal)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(title = "Population by State")
+
+# Step 4: Hexagonal Heatmap
+ggplot(midwest, aes(x = percollege, y = percadultpoverty)) +
+  geom_hex() +
+  labs(title = "Hexbin Plot of Education vs Poverty")
+
+# Step 5: Shared Aesthetic Mapping
+ggplot(midwest, aes(x = percollege)) +
+  geom_point(aes(y = percadultpoverty)) +
+  geom_point(aes(y = percchildbelowpovert), color = "green") +
+  labs(title = "Multiple Poverty Indicators")
+
+# Step 6: Custom color and transparency
+ggplot(midwest, aes(x = percollege, y = percadultpoverty)) +
+  geom_point(color = "red", alpha = 0.3) +
+  labs(title = "Customized Scatter Plot")
